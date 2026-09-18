@@ -1,35 +1,23 @@
 # BuildBlock
 
-A persistent multiplayer developer world where real software activity changes the world.
+BuildBlock is a persistent developer world where public GitHub activity changes a recognizable block in a shared district.
 
-## Status
-
-Early prototype.
-
-Current goal: build a living board populated by developers whose spaces visibly respond to real GitHub activity.
-
-## Development
+## Run locally
 
 ```bash
 npm install
 npm run dev
-Verification
+```
+
+For a reproducible offline board, copy `.env.example` to `.env.local` and set `BUILDBLOCK_DATA_MODE=recorded`.
+
+## Verify
+
+```bash
 npm run lint
 npm run typecheck
 npm test
 npm run build
+```
 
-See AGENTS.md and docs/ for product and architecture decisions.
-EOF
-
-
-Leave the deeper docs empty. Astra should author those after inspecting the repo.
-
-### 6. Add an environment template
-
-```bash
-cat > .env.example <<'EOF'
-# Optional during P0.
-# Public GitHub requests can work without authentication but are rate limited.
-
-GITHUB_TOKEN=
+See `docs/` for product, architecture, world-rule, and roadmap decisions.
