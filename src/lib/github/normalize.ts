@@ -2,6 +2,18 @@ import type { GitHubEventFact, NormalizedActivity } from "./types";
 
 const repositoryUrl = (name: string) => `https://github.com/${name}`;
 
+const duplicatePreferenceKey = (activity: NormalizedActivity) => [
+  activity.occurredAt,
+  activity.evidenceUrl,
+  activity.login,
+  activity.repository.name,
+  activity.sourceEventIds[0] ?? "",
+].join("\u0000");
+
+function preferDuplicate(current: NormalizedActivity, candidate: NormalizedActivity) {
+  return duplicatePreferenceKey(candidate) < duplicatePreferenceKey(current) ? candidate : current;
+}
+
 export function normalizeActivities(events: GitHubEventFact[], developerId: number): NormalizedActivity[] {
   const accepted = events
     .filter((event) => event.public && event.actor.id === developerId)
@@ -16,5 +28,10 @@ export function normalizeActivities(events: GitHubEventFact[], developerId: numb
       if (event.type === "ReleaseEvent" && event.payload.action === "published" && event.payload.release?.id) return [{ ...base, id: `release:${event.repo.id}:${event.payload.release.id}`, kind: "release_published", evidenceUrl: event.payload.release.html_url ?? repositoryUrl(event.repo.name) }];
       return [];
     });
-  return [...new Map(accepted.map((activity) => [activity.id, activity])).values()].sort((a, b) => b.occurredAt.localeCompare(a.occurredAt) || a.id.localeCompare(b.id));
+  const deduplicated = new Map<string, NormalizedActivity>();
+  for (const activity of accepted) {
+    const current = deduplicated.get(activity.id);
+    deduplicated.set(activity.id, current ? preferDuplicate(current, activity) : activity);
+  }
+  return [...deduplicated.values()].sort((a, b) => b.occurredAt.localeCompare(a.occurredAt) || a.id.localeCompare(b.id));
 }
