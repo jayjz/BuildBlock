@@ -47,6 +47,34 @@ A visitor should not need to open a detail panel before the workshop has meaning
 
 # Canonical spatial grammar
 
+## Public work apron
+
+The P0 workshop frontage is a large, inward-facing public work apron rather than a
+repository dashboard inside the building facade. Each occupied parcel has the same
+spatial budget and visibly connects its canonical perimeter address through a
+threshold, workshop building, apron workbench, and shared pedestrian path.
+
+The workshop building carries fixed identity: its configured silhouette, material,
+developer nameplate, and address threshold. The apron carries temporary observed
+work: up to three full repository placards in canonical repository order, plus a
+source and capture caption. Repository placards are mounted on one shared physical
+bench and may wrap; presentation must not reduce their text below normal reading
+size to preserve a fixed parcel height.
+
+An observed merge is represented once per repository as two joined pieces. An
+observed release is represented once per repository as a plain publication bundle
+with a dispatch label. These are evidence markers only: they do not imply
+completion, deployment, quality, or delivery success. A small, always-visible key
+states their source meanings in text.
+
+On desktop, the compact rectangular district keeps the 40-address perimeter and
+four civic corners while the three configured parcel presentations share the
+interior. The center is a small orientation landing and pedestrian path, not the
+district focal point. Below the desktop breakpoint, the perimeter becomes a compact
+orientation map and the same parcel components appear in address order as a
+readable vertical sequence. Inspection details open below the district so that
+selecting a workshop never shrinks the board.
+
 ## Developer parcel
 
 Each configured developer has a fixed parcel and address.

@@ -14,9 +14,9 @@ const labels: Record<ActivityKind, string> = {
 
 const dateTime = (value: string) => new Intl.DateTimeFormat("en", { dateStyle: "medium", timeStyle: "short", timeZone: "UTC" }).format(new Date(value)) + " UTC";
 
-type WorkshopDetailProps = { experience: DeveloperExperience; onClose: () => void; onNext: () => void; hasNext: boolean };
+type WorkshopDetailProps = { experience: DeveloperExperience; onClose: () => void; onNext: () => void; nextName?: string; hasNext: boolean };
 
-export function WorkshopDetail({ experience, onClose, onNext, hasNext }: WorkshopDetailProps) {
+export function WorkshopDetail({ experience, onClose, onNext, nextName, hasNext }: WorkshopDetailProps) {
   const headingRef = useRef<HTMLHeadingElement>(null);
   useEffect(() => { headingRef.current?.focus(); }, [experience.developer.login]);
   const { developer, profile, state } = experience;
@@ -48,6 +48,6 @@ export function WorkshopDetail({ experience, onClose, onNext, hasNext }: Worksho
       <h3>What this view covers</h3>
       <p>These are supported public GitHub events observed in this bounded window. They can be incomplete and do not show a complete project inventory, current presence, ownership, productivity, or project quality.</p>
     </section>
-    {hasNext && <button type="button" className="next-workshop" onClick={onNext}>Visit next workshop <span aria-hidden="true">→</span></button>}
+    {hasNext && <button type="button" className="next-workshop" onClick={onNext}>Visit {nextName}&apos;s workshop <span aria-hidden="true">→</span></button>}
   </aside>;
 }
