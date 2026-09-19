@@ -43,3 +43,5 @@ next-env.d.ts
 
 # local Python environment
 /venv/
+
+repomix-output.xml
