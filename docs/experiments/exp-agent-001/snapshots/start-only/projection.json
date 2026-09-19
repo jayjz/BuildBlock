@@ -1,0 +1,12 @@
+{
+  "input": "buildblock-local-run-v1: session.started only",
+  "asOf": "2026-09-19T23:34:00.000Z",
+  "validation": { "valid": true, "diagnostics": [] },
+  "projection": {
+    "ruleVersion": "work-observation-exp-v1",
+    "workshopId": "jayjz-workshop",
+    "repositories": [],
+    "detailObservationIds": ["local-run:local-fact:session-start"],
+    "diagnostics": []
+  }
+}

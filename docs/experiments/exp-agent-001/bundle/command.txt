@@ -1,0 +1,13 @@
+command=timeout 60s .venv/bin/python -m pytest tests/unit/test_clinc150_foundation.py -q
+started_at=2026-09-19T23:32:59.000Z
+output:
+................                                                         [100%]
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/_pytest/cacheprovider.py:469
+  /home/abundance333/Desktop/Projects/.worktrees/TEMPER-exp-agent-001/.venv/lib/python3.12/site-packages/_pytest/cacheprovider.py:469: PytestCacheWarning: cache could not write path /home/abundance333/Desktop/Projects/.worktrees/TEMPER-exp-agent-001/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/home/abundance333/Desktop/Projects/.worktrees/TEMPER-exp-agent-001/.pytest_cache/v/cache/nodeids'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+16 passed, 1 warning in 5.38s
+exit_code=0
+finished_at=2026-09-19T23:33:06.000Z

@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "buildblock-local-run-v1",
+  "sourceInstance": "collector:buildblock-local-v1",
+  "repository": { "id": "github-repository:1373439999", "name": "jayjz/TEMPER" },
+  "run": { "id": "local-run:exp-agent-001-20260919" },
+  "actor": { "id": "agent-run:exp-agent-001-20260919" },
+  "reporter": { "id": "collector:buildblock-local-v1" },
+  "facts": [{ "id": "local-fact:session-start", "kind": "session.started", "occurredAt": "2026-09-19T23:30:00.000Z", "observedAt": "2026-09-19T23:30:00.000Z", "baselineRevision": "0747730d18cdb692142d9c2b50f9e8bc1ff0c45f", "worktreeClean": true, "evidence": [{ "reference": "session start capture", "path": "session-start.txt", "sha256": "bee13ba8f701d417e684acf6db0180257c83ef58f52bbde332612db115be08ea" }] }]
+}

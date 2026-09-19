@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "buildblock-local-run-v1",
+  "sourceInstance": "collector:buildblock-local-v1",
+  "repository": { "id": "github-repository:1373439999", "name": "jayjz/TEMPER" },
+  "run": { "id": "local-run:exp-agent-001-20260919" },
+  "actor": { "id": "agent-run:exp-agent-001-20260919" },
+  "reporter": { "id": "collector:buildblock-local-v1" },
+  "facts": [
+    {
+      "id": "local-fact:session-start", "kind": "session.started", "occurredAt": "2026-09-19T23:30:00.000Z", "observedAt": "2026-09-19T23:30:00.000Z", "baselineRevision": "0747730d18cdb692142d9c2b50f9e8bc1ff0c45f", "worktreeClean": true,
+      "evidence": [{ "reference": "session start capture", "path": "session-start.txt", "sha256": "bee13ba8f701d417e684acf6db0180257c83ef58f52bbde332612db115be08ea" }]
+    },
+    {
+      "id": "local-fact:worktree-captured", "kind": "worktree.captured", "occurredAt": "2026-09-19T23:32:59.000Z", "observedAt": "2026-09-19T23:32:59.000Z", "beforeRevision": "0747730d18cdb692142d9c2b50f9e8bc1ff0c45f", "afterRevision": "git-worktree-diff-sha256:08589e60e57fb864d690bf1bc389524c6717b68d0fb2e659fe31f04e7cdce214", "patchEvidence": "complete patch",
+      "evidence": [{ "reference": "complete patch", "path": "patch.diff", "sha256": "08589e60e57fb864d690bf1bc389524c6717b68d0fb2e659fe31f04e7cdce214" }, { "reference": "worktree capture", "path": "worktree-captured.txt", "sha256": "ff4ac456495f0293e45a29f1e2e62aaffb3550f38b0732e2cd9ab3733737790f" }]
+    },
+    {
+      "id": "local-fact:verification", "kind": "command.finished", "occurredAt": "2026-09-19T23:33:06.000Z", "observedAt": "2026-09-19T23:33:06.000Z", "executionId": "local-execution:pytest-foundation", "checkKey": "temper-foundation-tests", "revision": "git-worktree-diff-sha256:08589e60e57fb864d690bf1bc389524c6717b68d0fb2e659fe31f04e7cdce214", "startedAt": "2026-09-19T23:32:59.000Z", "finishedAt": "2026-09-19T23:33:06.000Z", "outcome": "passed", "executionEvidence": "pytest output",
+      "evidence": [{ "reference": "pytest output", "path": "command.txt", "sha256": "e89ba4bce1b4c530c2777102008671e47df70a478bb64d5cc5150b6f082e6930" }]
+    },
+    {
+      "id": "local-fact:session-finished", "kind": "session.finished", "occurredAt": "2026-09-19T23:33:06.000Z", "observedAt": "2026-09-19T23:33:06.000Z", "outcome": "completed",
+      "evidence": [{ "reference": "session completion", "path": "session-finished.txt", "sha256": "d838ad8976e89e11667d6fbac58dbf5392c54d2d468b908f68780d3d51603244" }]
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+collector=collector:buildblock-local-v1
+run_id=local-run:exp-agent-001-20260919
+repository=github-repository:1373439999 jayjz/TEMPER
+baseline_revision=0747730d18cdb692142d9c2b50f9e8bc1ff0c45f
+worktree_clean=true
+captured_at=2026-09-19T23:30:00.000Z

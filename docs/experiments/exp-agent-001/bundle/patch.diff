@@ -1,0 +1,48 @@
+diff --git a/src/temper/datasets/splits.py b/src/temper/datasets/splits.py
+index b740145..e3457cf 100644
+--- a/src/temper/datasets/splits.py
++++ b/src/temper/datasets/splits.py
+@@ -10,6 +10,8 @@ from pathlib import Path
+ 
+ import numpy as np
+ 
++from temper.evidence import write_text_atomic
++
+ 
+ @dataclass(frozen=True)
+ class FrozenSplits:
+@@ -21,10 +23,8 @@ class FrozenSplits:
+     test_indices: tuple[int, ...]
+ 
+     def write(self, path: Path) -> None:
+-        if path.exists():
+-            raise FileExistsError(f"refusing to overwrite frozen split metadata: {path}")
+-        path.parent.mkdir(parents=True, exist_ok=True)
+-        path.write_text(json.dumps(asdict(self), indent=2, sort_keys=True), encoding="utf-8")
++        """Write immutable split metadata with the evidence layer's no-overwrite protocol."""
++        write_text_atomic(path, json.dumps(asdict(self), indent=2, sort_keys=True) + "\n")
+ 
+     @classmethod
+     def read(cls, path: Path) -> FrozenSplits:
+diff --git a/tests/unit/test_clinc150_foundation.py b/tests/unit/test_clinc150_foundation.py
+index 07eaf0e..2e46c72 100644
+--- a/tests/unit/test_clinc150_foundation.py
++++ b/tests/unit/test_clinc150_foundation.py
+@@ -65,6 +65,17 @@ def test_split_serialization_round_trip_and_refuses_overwrite(tmp_path: Path) ->
+         splits.write(path)
+ 
+ 
++def test_split_serialization_is_canonical_text_with_final_newline(tmp_path: Path) -> None:
++    splits = freeze_clinc150_splits(validation_labels=_official_validation_labels())
++    path = tmp_path / "nested" / "splits.json"
++
++    splits.write(path)
++
++    assert path.read_text(encoding="utf-8") == json.dumps(
++        splits.__dict__, indent=2, sort_keys=True
++    ) + "\n"
++
++
+ def _valid_payload() -> dict[str, list[list[str]]]:
+     labels = [f"intent-{index:03}" for index in range(150)]
+     return {

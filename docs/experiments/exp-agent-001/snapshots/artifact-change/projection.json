@@ -1,0 +1,18 @@
+{
+  "input": "buildblock-local-run-v1: session.started and worktree.captured",
+  "asOf": "2026-09-19T23:34:00.000Z",
+  "validation": { "valid": true, "diagnostics": [] },
+  "projection": {
+    "ruleVersion": "work-observation-exp-v1",
+    "workshopId": "jayjz-workshop",
+    "repositories": [{
+      "repository": { "id": "github-repository:1373439999", "name": "jayjz/TEMPER" },
+      "observed": true,
+      "integrationObserved": false,
+      "publicationObserved": false,
+      "supportingObservationIds": ["local-run:local-fact:worktree-captured"]
+    }],
+    "detailObservationIds": ["local-run:local-fact:session-start"],
+    "diagnostics": []
+  }
+}
