@@ -1,20 +1,66 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
-import type { DeveloperExperience } from "@/lib/developers";
+import { useEffect, useRef, useState } from "react";
 import { boardSpaces } from "@/data/board";
+import { curatedDevelopers } from "@/data/developers";
+import type { DeveloperExperience } from "@/lib/developers";
+import { DeveloperWorkshop } from "./developer-workshop";
+import { DistrictCommons } from "./district-commons";
+import { WorkshopDetail } from "./workshop-detail";
 
-const labels = { code_pushed: "Code pushed", pull_request_opened: "Pull request opened", pull_request_merged: "Pull request merged", release_published: "Release published" };
-function Building({ experience }: { experience: DeveloperExperience }) {
-  const { developer, profile, state } = experience;
-  return <div className={`building building--${developer.shape} building--${developer.color}`}>
-    {state.releaseEvents.length > 0 && <span className="beacon" aria-label="Release beacon" />}{state.mergeEvents.length > 0 && <span className="pennant" aria-label="Merge pennant">◆</span>}
-    <div className="roof" /><div className="facade"><div className="windows" aria-label={`${state.windows.filter(Boolean).length} observed workdays in the last seven days`}>{state.windows.map((lit, index) => <span className={lit ? "window window--lit" : "window"} key={index} />)}</div></div><Image src={profile.avatar_url} alt="" className="avatar" width={17} height={17} />
+const position = (index: number) => {
+  if (index <= 10) return `1 / ${index + 1}`;
+  if (index <= 20) return `${index - 9} / 11`;
+  if (index <= 30) return `11 / ${31 - index}`;
+  return `${41 - index} / 1`;
+};
+
+export function DistrictBoard({ developers }: { developers: DeveloperExperience[] }) {
+  const [selected, setSelected] = useState<DeveloperExperience | null>(null);
+  const originRef = useRef<HTMLButtonElement | null>(null);
+  const workshopRefs = useRef(new Map<string, HTMLButtonElement>());
+  const byLogin = new Map(developers.map((experience) => [experience.developer.login, experience]));
+  const available = [...developers].sort((a, b) => a.developer.address - b.developer.address);
+
+  useEffect(() => {
+    if (!selected) return;
+    workshopRefs.current.get(selected.developer.login)?.scrollIntoView({ behavior: "auto", block: "nearest", inline: "nearest" });
+  }, [selected]);
+
+  const inspect = (experience: DeveloperExperience, origin?: HTMLButtonElement | null) => {
+    if (origin) originRef.current = origin;
+    setSelected(experience);
+  };
+  const close = () => {
+    setSelected(null);
+    requestAnimationFrame(() => originRef.current?.focus());
+  };
+  const next = () => {
+    if (!selected || available.length < 2) return;
+    const currentIndex = available.findIndex((experience) => experience.developer.login === selected.developer.login);
+    setSelected(available[(currentIndex + 1) % available.length]!);
+  };
+
+  return <div className={`district-layout${selected ? " district-layout--inspecting" : ""}`}>
+    <nav className="mobile-directory" aria-label="Workshop directory">
+      {available.map((experience) => <button type="button" key={experience.developer.login} onClick={(event) => inspect(experience, event.currentTarget)}>{experience.profile.name ?? experience.profile.login} <small>{experience.developer.address.toString().padStart(2, "0")}</small></button>)}
+    </nav>
+    <section className="board-shell" aria-label="BuildBlock District 01 board">
+      <div className="district-board">
+        {boardSpaces.map((space) => {
+          const experience = space.login ? byLogin.get(space.login) : undefined;
+          if (space.kind === "developer") {
+            const developer = curatedDevelopers.find((entry) => entry.login === space.login)!;
+            return <div key={space.index} className={`space space--developer${selected?.developer.login === developer.login ? " space--selected" : ""}`} style={{ gridArea: position(space.index) }}>
+              <DeveloperWorkshop developer={developer} experience={experience} selected={selected?.developer.login === developer.login} onInspect={experience ? () => inspect(experience, workshopRefs.current.get(developer.login)) : undefined} workshopRef={(element) => { if (element) workshopRefs.current.set(developer.login, element); else workshopRefs.current.delete(developer.login); }} />
+            </div>;
+          }
+          if (space.kind === "civic") return <div key={space.index} className="space space--civic" style={{ gridArea: position(space.index) }}><span>{space.label}</span></div>;
+          return <div key={space.index} className="space space--open" style={{ gridArea: position(space.index) }} aria-label="Surveyed open plot"><i aria-hidden="true" /><span>{space.index.toString().padStart(2, "0")}</span></div>;
+        })}
+        <DistrictCommons developers={available} onInspect={(experience) => inspect(experience)} />
+      </div>
+    </section>
+    {selected && <WorkshopDetail experience={selected} onClose={close} onNext={next} hasNext={available.length > 1} />}
   </div>;
 }
-export function DistrictBoard({ developers }: { developers: DeveloperExperience[] }) {
-  const [selected, setSelected] = useState<DeveloperExperience | null>(developers[0] ?? null); const byLogin = new Map(developers.map((developer) => [developer.developer.login, developer]));
-  return <><section className="board-shell" aria-label="BuildBlock district"><div className="district-board">{boardSpaces.map((space) => { const experience = space.login ? byLogin.get(space.login) : undefined; if (experience) return <button key={space.index} className="space space--developer" style={{ gridArea: position(space.index) }} onClick={() => setSelected(experience)} aria-label={`Inspect ${space.label}'s block`}><Building experience={experience} /><span>{space.label}</span></button>; if (space.kind === "civic") return <div key={space.index} className="space space--civic" style={{ gridArea: position(space.index) }}><span>{space.label}</span></div>; return <div key={space.index} className="space space--open" style={{ gridArea: position(space.index) }} aria-label="Open plot"><i /><span>Open plot</span></div>; })}<div className="commons"><p className="eyebrow">BUILD BLOCK / DISTRICT 01</p><h1>A place built from real work.</h1><p>Public GitHub activity gives each block a temporary pulse. The address stays put.</p><button onClick={() => setSelected(developers[0])}>Explore jayjz’s block</button></div></div></section>{selected && <aside className="detail" aria-live="polite"><button className="detail-close" onClick={() => setSelected(null)} aria-label="Close block details">×</button><div className="detail-heading"><Image src={selected.profile.avatar_url} alt="" width={58} height={58} /><div><p className="eyebrow">BLOCK {selected.developer.address.toString().padStart(2, "0")}</p><h2>{selected.profile.name ?? selected.profile.login}</h2><a href={selected.profile.html_url} target="_blank" rel="noreferrer">@{selected.profile.login} ↗</a></div></div><p className="source-pill">{selected.source === "live" ? "Live public GitHub data" : "Recorded GitHub fixture"} · {new Date(selected.capturedAt).toLocaleDateString()}</p><section><h3>Why this block is lit</h3><p>Each illuminated window represents a UTC day with observed public work in this seven-day view. This is not a score or a claim of complete activity.</p>{selected.state.explanations.map((text) => <p className="explanation" key={text}>{text}</p>)}</section><section><h3>Observed repositories</h3><ul>{[...new Map(selected.activities.map((activity) => [activity.repository.id, activity])).values()].slice(0, 3).map((activity) => <li key={activity.repository.id}><a href={`https://github.com/${activity.repository.name}`} target="_blank" rel="noreferrer">{activity.repository.name} ↗</a></li>)}</ul></section><section><h3>Recent evidence</h3><ol>{selected.activities.slice(0, 5).map((activity) => <li key={activity.id}><a href={activity.evidenceUrl} target="_blank" rel="noreferrer">{labels[activity.kind]}</a><span>{activity.repository.name}</span></li>)}</ol></section></aside>}</>;
-}
-function position(index: number) { if (index <= 10) return `1 / ${index + 1}`; if (index <= 20) return `${index - 9} / 11`; if (index <= 30) return `11 / ${31 - index}`; return `${41 - index} / 1`; }
